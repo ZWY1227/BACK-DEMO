@@ -14,8 +14,9 @@ export default class App extends Component {
             <div id="rootson">
                 <BrowserRouter>
                     <Switch>
-                        <Route path="/" exact component={Admin}></Route>
+                        <Route path="/" component={Admin}></Route>
                         <Route path="/login" component={Login}></Route>
+                        <Route component={Login}></Route>
                     </Switch>
                 </BrowserRouter>
             </div>

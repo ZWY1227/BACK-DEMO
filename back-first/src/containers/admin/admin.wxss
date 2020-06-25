@@ -1,0 +1,14 @@
+.big .sid .h {
+  height: 63px;
+  background-color: #00aa98;
+  line-height: 63px;
+  font-size: 25px;
+  padding-left: 15px;
+}
+.big .small .hea {
+  background-color: #001529;
+  color: #fff;
+}
+.big .small .con {
+  margin-left: 100px;
+}

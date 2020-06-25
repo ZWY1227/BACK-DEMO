@@ -2,16 +2,33 @@ import React, { Component } from "react"
 import "./login.css"
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-let rules=[{ required: true, message: 'Please input your Username!' },
-            {max:14,message:'最大为14位'},
-            {min:6,message:'最小长度为6位'} ,
-            {pattern:/[0-9A-Z]{6,14}$/,message:'必须为数字和字母'}         
+import { reqlogin } from "../../Api/index"
+import {setStor} from "../../util/local"
+import memory from "../../util/memory"
+import {Redirect} from "react-router-dom"
+
+let rules = [{ required: true, message: 'Please input your Username!' },
+{ max: 14, message: '最大为14位' },
+{ min: 4, message: '最小长度为4位' },
+{ pattern: /[a-z0-9A-Z]{4,14}$/, message: '必须为数字和字母' }
 ]
 export default class Login extends Component {
-    onFinish=(value)=>{
-        console.log(value)
+    onFinish = async value => {
+        // console.log(value)
+        //拿到输入框的值就发送ajax请求，拿到接口返回的数据，如果登录成功就跳转，
+        //如果登录失败就提示重新输入密码
+        let result = await reqlogin(value.username, value.password)
+        if (result.status === 0) {
+           //往内存中存一份，往硬盘中存一份
+           memory.user=result.data
+           setStor(result.data)
+           this.props.history.replace("/")
+        }
     }
     render() {
+        if(memory.user&&memory.user._id){
+            return (<Redirect to="/"></Redirect>)
+        }else{  
         return (
             <div className="index">
                 <header className="hea">
@@ -53,5 +70,6 @@ export default class Login extends Component {
                 </section>
             </div>
         )
+    }
     }
 }
