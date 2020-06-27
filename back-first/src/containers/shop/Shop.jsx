@@ -6,8 +6,8 @@ export default class Shop extends Component{
     render(){
         return(
             <Switch>
-                <Route path="/shop/one" component={One}></Route>
-                <Route path="/shop/two" component={Two}></Route>
+                <Route path="/admin/shop/one" component={One}></Route>
+                <Route path="/admin/shop/two" component={Two}></Route>
             </Switch>
         )
     }

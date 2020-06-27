@@ -40,16 +40,16 @@ export default class Admin extends Component {
                         <Hea></Hea>
                         <Content className="con">
                             <Switch>
-                                <Route path="/home" component={Home}></Route>
-                                <Route path="/shop" component={Shop}></Route>
-                                <Route path="/user" component={User}></Route>
-                                <Route path="/role" component={Role}></Route>
-                                <Route path="/pic" component={Pic}></Route>
-                                <Route path="/order" component={Order}></Route>
-                                <Route component={Home}></Route>
+                                <Route path="/admin/home" component={Home}></Route>
+                                <Route path="/admin/shop" component={Shop}></Route>
+                                <Route path="/admin/user" component={User}></Route>
+                                <Route path="/admin/role" component={Role}></Route>
+                                <Route path="/admin/pic" component={Pic}></Route>
+                                <Route path="/admin/order" component={Order}></Route>
+                                <Redirect from="/admin" to="/admin/home"></Redirect>
                             </Switch>
                         </Content>
-                        <Footer>Footer</Footer>
+                        <Footer className="foo">react~解忧杂货铺</Footer>
                     </Layout>
                 </Layout>
             )

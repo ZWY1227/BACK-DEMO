@@ -39,6 +39,7 @@
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
+    "jsonp": "^0.2.1",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "0.9.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
@@ -146,5 +147,5 @@
       "react-app"
     ]
   },
-  "proxy":"http://127.0.0.1:5000"
+  "proxy": "http://127.0.0.1:5000"
 }
