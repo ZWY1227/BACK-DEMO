@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import One from "./AAA.jsx"
-import Two from "./BBB.jsx"
+import Two from "./BBB"
 import {Route,Switch}from "react-router-dom"
 export default class Shop extends Component{
     render(){

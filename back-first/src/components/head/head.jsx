@@ -58,7 +58,6 @@ export default class Hea extends Component{
     //调用接口来拿到天气和图片
     getweather=async ()=>{
         let result=await reqweather("郑州")
-        console.log(result)
         if(result){
             let weather=result.weather
             let url=result.url

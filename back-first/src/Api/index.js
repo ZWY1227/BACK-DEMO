@@ -21,11 +21,18 @@ export const reqweather=(city)=>{
 }
 // 6). 获取一级或某个二级分类列表
 export const reqCategorys = (parentId) => ajax( '/manage/category/list',{parentId})
-
 // 7). 添加一级分类
 export const reqAddCategory = (categoryName) => ajax( '/manage/category/add', {categoryName}, 'POST')
 //添加二级分类
-export const reqAddCategoryT = ({categoryId, categoryName}) => ajax( '/manage/category/add',{categoryId, categoryName}, 'POST')
+export const reqAddCategoryT = (parentId, categoryName) => ajax( '/manage/category/add',{parentId, categoryName}, 'POST')
 // 8). 更新品类名称
-export const reqUpdateCategory = ({categoryId, categoryName}) => ajax( '/manage/category/update', {categoryId, categoryName}, 'POST')
+export const reqUpdateCategory = (categoryId, categoryName) => ajax( '/manage/category/update', {categoryId, categoryName}, 'POST')
 
+
+
+
+
+//10获取商品分页列表//页码和每页的条目数
+export const reqshoplist=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
+//11根据ID/Name搜索产品分页列表,页码，每页条目数，根据商品名称搜索，根据商品描述搜索
+export const reqshoplist=(pageNum,pageSize,productName,productDesc)
