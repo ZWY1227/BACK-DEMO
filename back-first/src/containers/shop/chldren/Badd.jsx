@@ -1,129 +1,202 @@
 import React, { Component } from "react"
-import { Card, Upload, message } from 'antd';
-import { ArrowLeftOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { Form, Input, Select, Button } from 'antd';
-
-
-
-const { Option } = Select
+import PicturesWall from "./upload"
+import { Card, message} from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Form, Input, Button, Cascader } from 'antd';
+import "../../../../node_modules/react-umeditor/dist/less/editor.less"
+import { reqCategorys,addShop } from '../../../Api/index'
+import Editor from 'react-umeditor'
 export default class Badd extends Component {
-    onGoback = () => {
+    constructor(props){
+        super(props)
+        this.myref=React.createRef()
+    }
+    getFirstList = async () => {
+        let res = await reqCategorys()
+        if (res.status === 0) {
+            let firstList = res.data.map((item) => {
+                let obj = {
+                    value: item._id,
+                    label: item.name,
+                }
+                return obj
+            })
+            firstList.map(async (key) => {
+                let datas = await reqCategorys(key.value)
+                let aaa = datas.data.map((result) => {
+                    let objs = {
+                        value: result._id,
+                        label: result.name,
+                    }
+                    return objs
+                })
+                if (aaa.length) {
+                    key.children = aaa
+                }
+                // arr.push(key)
+                this.setState({
+                    options: firstList
+                })
+            })
+        }
+    }
+    componentDidMount() {
+        this.getFirstList()
+    }
+    // 富文本编辑器的代码==
+    getIcons() {
+        var icons = [
+            "source | undo redo | bold italic underline strikethrough fontborder emphasis | ",
+            "paragraph fontfamily fontsize | superscript subscript | ",
+            "forecolor backcolor | removeformat | insertorderedlist insertunorderedlist | selectall | ",
+            "cleardoc  | indent outdent | justifyleft justifycenter justifyright | touppercase tolowercase | ",
+            "horizontal date time  | image emotion spechars | inserttable"
+        ]
+        return icons;
+    }
+    getQiniuUploader() {
+        return {
+            url: 'http://upload.qiniu.com',
+            type: 'qiniu',
+            name: "file",
+            request: "image_src",
+            qiniu: {
+                app: {
+                    Bucket: "liuhong1happy",
+                    AK: "l9vEBNTqrz7H03S-SC0qxNWmf0K8amqP6MeYHNni",
+                    SK: "eizTTxuA0Kq1YSe2SRdOexJ-tjwGpRnzztsSrLKj"
+                },
+                domain: "http://o9sa2vijj.bkt.clouddn.com",
+                genKey: function (options) {
+                    return options.file.type + "-" + options.file.size + "-" + options.file.lastModifiedDate.valueOf() + "-" + new Date().valueOf() + "-" + options.file.name;
+                }
+            }
+        }
+    }
+    //富文本结束
+    onGoback =() => {
         console.log(this.props.history.goBack())
     }
-    addOk=(vallue)=>{
-        console.log(vallue)
-
-    }
-
-    getBase64 = (img, callback) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
-    beforeUpload = (file) => {
-        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJpgOrPng) {
-            message.error('You can only upload JPG/PNG file!');
+    //点击添加商品ok
+    addOk =async (value) => {
+        let imgs=this.myref.current.getImage()//图片的所有信息
+        let {pCategoryId,categoryId,content}=this.state//拿到俩ID，富文本数据
+        let {name,desc,price} =value//名字，描述，价格
+        let result=await addShop(categoryId,pCategoryId,name,desc,price,content,imgs)
+        console.log(result)
+        if(result.status===0){
+            message.success("添加商品成功")
+            this.props.history.replace("/admin/shop/two/Bshop")
+        }else{
+            message.error("添加商品出错")
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-            message.error('Image must smaller than 2MB!');
-        }
-        return isJpgOrPng && isLt2M;
     }
     // ==================================
     state = {
         loading: false,
-      };
-    
-      handleChange = info => {
-        if (info.file.status === 'uploading') {
-          this.setState({ loading: true });
-          return;
-        }
-        if (info.file.status === 'done') {
-          this.getBase64(info.file.originFileObj, imageUrl =>
-            this.setState({
-              imageUrl,
-              loading: false,
-            }),
-          );
-        }
-      };
+        content: "",
+        options: [],
+        firstId: '',
+        pCategoryId:"",//父Id
+        categoryId:"",//二级分类Id
+        newFileList:[]
+    };
+    // ---- 选择一级分类change事件
+    onChange = (value) => {
+        console.log(value[0],value[1])
+        this.setState({
+            pCategoryId:value[0],
+            categoryId:value[1]
+        })
+    }
+    editor = (e) => {
+        this.setState({
+            content: e
+        })
+    }
     render() {
+        //car的头
+        let {product,isEdit}=this
+        let {name,desc,price,pCategoryId,categoryId,imgs,detail}=product
         const title = (
             <div>
                 <ArrowLeftOutlined style={{ color: '#00aa98' }} onClick={this.onGoback} />
-                <span>添加商品</span>
+                <span>{isEdit?"编辑商品":"添加商品"}</span>
             </div>
         )
-      
-// ==============================上传
-const uploadButton = (
-    <div>
-      {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">Upload</div>
-    </div>
-  );
-  const { imageUrl } = this.state;
-            return (
-                <Card title={title}>
-                    <Form name="dynamic_rule" onFinish={this.addOk}>
-                        <Form.Item
-                            name="username"
-                            label="商品名称"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your name',
-                                },
-                            ]}
-                        >
-                            <Input placeholder="Please input your name" />
-                        </Form.Item>
-
-
-
-                        <Form.Item name={['user', 'introduction']} label="商品描述" required='true' >
-                            <Input.TextArea />
-                        </Form.Item>
-
-
-
-                        <Form.Item label="商品分类" required='true' name="cate">
-                            <Select placeholder="Please select a country">
-                                <Option value="china">China</Option>
-                                <Option value="usa">U.S.A</Option>
-                            </Select>
-                        </Form.Item>
-                        {/* 上传图片 */}
-
-<Form.Item label="上传照片" name='pic'>
-<Upload
-        name="avatar"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        beforeUpload={this.beforeUpload}
-        onChange={this.handleChange}
-      >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-      </Upload>
-</Form.Item>
-
-
-
-
-
-
-                        <Form.Item>
-                            <Button type="primary" htmlType='submit'>提交</Button>
-                        </Form.Item>
-                    </Form>
-                </Card>
-            )
+        //==富文本编辑的代码
+        var icons = this.getIcons();
+        var uploader = this.getQiniuUploader();
+        var plugins = {
+            image: {
+                uploader: uploader
+            }
         }
-    }
+        var count = 100;
+        var editors = [];
+        for (var i = 0; i < count; i++) {
+            editors.push({
+                icons: icons,
+                plugins: plugins
+            })
+        }
+        //==富文本结束
+        const { options } = this.state;
+        return (
+            <Card title={title} style={{ height: 710 }}>
+                <Form name="dynamic_rule" onFinish={this.addOk} style={{ height: 360 }}>
+                    <Form.Item
+                        name="name"
+                        label="商品名称"
+                        required='true'
+                        initialValue={isEdit?name:""}
+                    >
+                        <Input />
+                    </Form.Item>
 
+                    <Form.Item label="商品描述" required='true' name="desc"  initialValue={isEdit?desc:""}>
+                        <Input.TextArea  placeholder="请输入商品描述" autoSize={{minRows:2,maxRows:2}}/>
+                    </Form.Item>
+
+                    <Form.Item label="商品价格" required='true' name="price"  initialValue={isEdit?price:""} >
+                        <Input addonAfter="元" />
+                    </Form.Item>
+
+                    <Form.Item label="商品分类" required='true' name="cate" initialValue={isEdit?[pCategoryId,categoryId]:""}>
+                        <Cascader
+                            options={options}
+                            expandTrigger="click"
+                            onChange={this.onChange}
+                        />
+                    </Form.Item>
+                    {/* 上传图片 */}
+                    <Form.Item label="上传照片">
+                       <PicturesWall setimages={isEdit?imgs:[]} ref={this.myref} ></PicturesWall>
+                    </Form.Item>
+                    <Form.Item style={{ position: "absolute", bottom: 0 }}>
+                        <Button type="primary" htmlType='submit'>提交</Button>
+                    </Form.Item>
+                </Form>
+                <h4>商品详情：</h4>
+                <Editor ref="editor"
+                    icons={icons}
+                    value={this.state.content}
+                    onChange={this.editor}
+                    defaultValue={isEdit?detail:""}
+                />
+            </Card>
+        )
+    }
+    componentWillMount(){
+        if(this.props.location.query){//表示传了参数，就是编辑，否则是添加
+            let product=this.props.location.query.detail
+            console.log(product)
+            this.isEdit=!!product
+            this.product=product
+        }else{
+            this.product={}
+        } 
+      }
+    componentDidUpdate(){
+    }
+    }

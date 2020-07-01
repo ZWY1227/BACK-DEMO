@@ -57,6 +57,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
     "react-scripts-rewired": "^3.1.1",
+    "react-umeditor": "^1.0.15",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",
