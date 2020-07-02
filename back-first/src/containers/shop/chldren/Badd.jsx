@@ -179,7 +179,7 @@ export default class Badd extends Component {
                         <Input addonAfter="元" />
                     </Form.Item>
 
-                    <Form.Item label="商品分类" required='true' name="cate" initialValue={isEdit?pCategoryId==="0"?[categoryId]:[pCategoryId,categoryId]:""}>
+                    <Form.Item label="商品分类" required='true' name="cate" initialValue={isEdit?pCategoryId==="0"?[categoryId]:[pCategoryId,categoryId]:['请选择分类']}>
                         <Cascader
                             options={options}
                             expandTrigger="click"

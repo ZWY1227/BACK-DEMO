@@ -8,7 +8,6 @@ export const reqweather=(city)=>{
     return new Promise((resolve,reject)=>{
         let url=`http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
         jsonp(url,{},(err,data)=>{
-            console.log(data)
             if(data.status==="success"){
                 let weather=data.results[0].weather_data[0].weather
                 let url=data.results[0].weather_data[0].dayPictureUrl
@@ -21,6 +20,7 @@ export const reqweather=(city)=>{
         })
     })
 }
+// ---------------------------------分类接口
 // 6). 获取一级或某个二级分类列表
 export const reqCategorys = (parentId) => ajax( '/manage/category/list',{parentId})
 // 7). 添加一级分类
@@ -33,7 +33,7 @@ export const reqUpdateCategory = (categoryId, categoryName) => ajax( '/manage/ca
 
 
 
-
+//---------------------------------------商品接口
 //10获取商品分页列表//页码和每页的条目数
 export const reqshoplist=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
 //11根据ID/Name搜索产品分页列表,页码，每页条目数，根据商品名称搜索，根据商品描述搜索
@@ -42,15 +42,18 @@ export const reqshoplistbysearch=(pageNum,pageSize,productName,productType)=>aja
 })
 //12根据父id来获取自己分类
 export const reqCate=(categoryId)=>ajax("/manage/category/info",{categoryId:categoryId})
-//13添加商品,父类id，父分类id，商品名称，商品描述，商品价格，商品详情，商品图片名数categoryId,pCategoryId,name,desc,price,detail,imgs
+//13添加和修改商品,父类id，父分类id，商品名称，商品描述，商品价格，商品详情，商品图片名数categoryId,pCategoryId,name,desc,price,detail,imgs
 export const addShop=(product)=>ajax(`/manage/product/${product._id?'update':'add'}`,
 product,"post")
-
-
-
-
-
 //14对商品的上架和下架操作
 export const updateStatus=(productId,status)=>ajax("/manage/product/updateStatus",{productId,status},'POST')
 //15删除图片的接口
 export const removeImg=(name)=>ajax("/manage/img/delete",{name},'POST')
+
+
+
+//--------------------------角色接口
+//16添加角色
+export const reqRole=(roleName)=>ajax("/manage/role/add",{roleName},'POST')
+//17获取角色列表
+export const reqRoleList=()=>ajax("/manage/role/list")
