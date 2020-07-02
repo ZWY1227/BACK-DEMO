@@ -42,9 +42,14 @@ export const reqshoplistbysearch=(pageNum,pageSize,productName,productType)=>aja
 })
 //12根据父id来获取自己分类
 export const reqCate=(categoryId)=>ajax("/manage/category/info",{categoryId:categoryId})
-//13添加商品,父类id，父分类id，商品名称，商品描述，商品价格，商品详情，商品图片名数
-export const addShop=(categoryId,pCategoryId,name,desc,price,detail,imgs)=>ajax("/manage/product/add",
-{categoryId,pCategoryId,name,desc,price,detail,imgs},"post")
+//13添加商品,父类id，父分类id，商品名称，商品描述，商品价格，商品详情，商品图片名数categoryId,pCategoryId,name,desc,price,detail,imgs
+export const addShop=(product)=>ajax(`/manage/product/${product._id?'update':'add'}`,
+product,"post")
+
+
+
+
+
 //14对商品的上架和下架操作
 export const updateStatus=(productId,status)=>ajax("/manage/product/updateStatus",{productId,status},'POST')
 //15删除图片的接口

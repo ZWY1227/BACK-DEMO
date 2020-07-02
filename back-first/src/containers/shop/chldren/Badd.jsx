@@ -33,7 +33,6 @@ export default class Badd extends Component {
                 if (aaa.length) {
                     key.children = aaa
                 }
-                // arr.push(key)
                 this.setState({
                     options: firstList
                 })
@@ -79,17 +78,27 @@ export default class Badd extends Component {
     }
     //点击添加商品ok
     addOk =async (value) => {
+        //添加页面点击确定后发送添加请求
         let imgs=this.myref.current.getImage()//图片的所有信息
         let {pCategoryId,categoryId,content}=this.state//拿到俩ID，富文本数据
         let {name,desc,price} =value//名字，描述，价格
-        let result=await addShop(categoryId,pCategoryId,name,desc,price,content,imgs)
-        console.log(result)
-        if(result.status===0){
-            message.success("添加商品成功")
-            this.props.history.replace("/admin/shop/two/Bshop")
+    console.log(categoryId,pCategoryId)
+        let product={categoryId,pCategoryId,name,desc,price,detail:content,imgs}
+        let result
+        if(this.isEdit){//如果更新，需要传8个数据，多了一个_id
+            let {_id,categoryId,pCategoryId}=this.product
+            console.log(categoryId,pCategoryId)
+            let productedit={categoryId,pCategoryId,_id,name,desc,price,detail:this.state.content,imgs}
+            result=await addShop(productedit)
+   
         }else{
-            message.error("添加商品出错")
+            console.log(product,"11")
+            result=await addShop(product)
         }
+        if(result.status===0){
+            this.props.history.replace("/admin/shop/two/Bshop")
+            message.success(this.isEdit?'更新':'添加'+"商品成功") 
+          }
     }
     // ==================================
     state = {
@@ -103,13 +112,21 @@ export default class Badd extends Component {
     };
     // ---- 选择一级分类change事件
     onChange = (value) => {
-        console.log(value[0],value[1])
+        if(value.length===1){
         this.setState({
-            pCategoryId:value[0],
-            categoryId:value[1]
-        })
+            pCategoryId:"0",
+            categoryId:value[0]
+        },()=>console.log(this.state.pCategoryId))
+        }else{
+            this.setState({
+                pCategoryId:value[0],
+                categoryId:value[1]
+            },()=>console.log(this.state.pCategoryId))
+        }
+       
     }
     editor = (e) => {
+        console.log(e,"11111")
         this.setState({
             content: e
         })
@@ -162,7 +179,7 @@ export default class Badd extends Component {
                         <Input addonAfter="元" />
                     </Form.Item>
 
-                    <Form.Item label="商品分类" required='true' name="cate" initialValue={isEdit?[pCategoryId,categoryId]:""}>
+                    <Form.Item label="商品分类" required='true' name="cate" initialValue={isEdit?pCategoryId==="0"?[categoryId]:[pCategoryId,categoryId]:""}>
                         <Cascader
                             options={options}
                             expandTrigger="click"
@@ -181,8 +198,8 @@ export default class Badd extends Component {
                 <Editor ref="editor"
                     icons={icons}
                     value={this.state.content}
-                    onChange={this.editor}
                     defaultValue={isEdit?detail:""}
+                    onChange={this.editor}
                 />
             </Card>
         )
@@ -190,13 +207,10 @@ export default class Badd extends Component {
     componentWillMount(){
         if(this.props.location.query){//表示传了参数，就是编辑，否则是添加
             let product=this.props.location.query.detail
-            console.log(product)
             this.isEdit=!!product
             this.product=product
         }else{
             this.product={}
         } 
       }
-    componentDidUpdate(){
-    }
     }

@@ -37,11 +37,11 @@ export default class Hea extends Component{
                                 {time}
                             </li>
                             <li>
-                                {/* <img src={url} alt={url}></img> */}
-                                <div>图片</div>
+                                <img src={url} alt={url}></img>
+                                {/* <div>图片</div> */}
                             </li>
                             <li>
-                            {/* {weather} */}
+                            {weather}
                             晴天
                             </li>
                         </ul>
@@ -72,6 +72,6 @@ export default class Hea extends Component{
     }
    componentDidMount(){
        this.initTime()
-    //    this.getweather()
+       this.getweather()
    }
 }

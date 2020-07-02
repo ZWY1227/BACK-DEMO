@@ -23,15 +23,15 @@ export default class Bdetail extends Component {
     getcateson=async(categoryId)=>{
         let result=await reqCate(categoryId)
         if(result.status===0){
-            message.success("获取父级分类成功")
+            message.success("获取子分类成功")
             let nameson=result.data.name
             this.setState({nameson})
         }else{
-            message.error("获取父级分类失败")
+            message.error("获取子分类失败")
         }
     }
     render() {  
-        let { imgs, _id, name, desc, price, detail, pCategoryId, categoryId } = this.props.history.location.query.detail
+        let { imgs, name, desc, price, detail } = this.props.history.location.query.detail
         const title = (
             <div>
                 <ArrowLeftOutlined style={{ color: '#00aa98' }} onClick={this.onGoback} />
@@ -73,10 +73,19 @@ export default class Bdetail extends Component {
         )
     }
     componentDidMount(){
+        console.log(this.props.history.location.query.detail)
         let id=this.props.history.location.query.detail.pCategoryId
         let idson=this.props.history.location.query.detail.categoryId
-        this.getcate(id)
-        this.getcateson(idson)
+        if(id!=="0"&&idson){
+            console.log("1111")
+            this.getcateson(idson)
+            this.getcate(id)
+        }else{
+            this.setState({
+                name:"属于分类"
+            })
+            this.getcateson(idson)
+        } 
     }
 }
 
