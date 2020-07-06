@@ -209,7 +209,7 @@ export default class One extends Component {
                 <Card type="inner" 
                 title={this.state.parentId==="0"?<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一级分类列表</span>:(<span><LinkButton  onClick={this.goOne}>一级分类列表---&gt;</LinkButton><span>{this.state.cateName}</span></span>)
                 } extra={extra}>
-                    <Table dataSource={parentId==="0"?dataSource:twodataSource} columns={columns} bordered pagination={{ defaultPageSize: 5, showQuickJumper: true }} />
+                    <Table dataSource={parentId==="0"?dataSource:twodataSource} columns={columns} bordered pagination={{PageSize:2, showQuickJumper: true }} />
                 </Card>
             </div>
         )

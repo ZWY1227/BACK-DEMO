@@ -22,7 +22,6 @@ const menuList = [
       },
     ]
   },
-
   {
     title: '用户管理',
     key: '/admin/user',
@@ -33,7 +32,6 @@ const menuList = [
     key: '/admin/role',
     icon: 'safety',
   },
-
   {
     title: '图形图表',
     key: '/admin/pic',
@@ -56,7 +54,6 @@ const menuList = [
       },
     ]
   },
-
   {
     title: '订单管理',
     key: '/admin/order',

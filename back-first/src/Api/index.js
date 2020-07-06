@@ -57,3 +57,20 @@ export const removeImg=(name)=>ajax("/manage/img/delete",{name},'POST')
 export const reqRole=(roleName)=>ajax("/manage/role/add",{roleName},'POST')
 //17获取角色列表
 export const reqRoleList=()=>ajax("/manage/role/list")
+//18更新角色
+export const updataRole=(_id,menus,auth_time,auth_name)=>ajax("/manage/role/update",{_id,menus,auth_time,auth_name},'POST')
+//----------------------------用户接口
+
+
+
+
+
+
+//增加用户:用户名，密码，手机号，邮箱，角色id
+export const addUse=(username,password,phone,email,role_id)=>ajax('/manage/user/add',{username,password,phone,email,role_id},'POST')
+//删除用户：用户id
+export const deleteUse=(userId)=>ajax('/manage/user/delete',{userId},'POST')
+//更改用户：用户ID，用户名，手机号，邮箱，角色id
+export const updateUse=(_id,username,phone,email,role_id)=>ajax('/manage/user/update',{_id,username,phone,email,role_id},'POST')
+//查看所有用户列表
+export const showUse=()=>ajax('/manage/user/list')
