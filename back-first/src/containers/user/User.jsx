@@ -114,6 +114,9 @@ export default class User extends Component {
             {
                 title: '注册时间',
                 dataIndex: 'create_time',
+                render:(create_time)=>{
+                    return filter_Time(create_time)
+                }
             },
             {
                 title: '所属角色',
@@ -138,6 +141,7 @@ export default class User extends Component {
             role_id: e
         })
     }
+    // _id,menus,auth_time,auth_name
     addOK = async (e) => {
         let { role_id,username, password, phone, email } = e
         let result = await addUse(username, password, phone, email, role_id)
@@ -252,27 +256,31 @@ export default class User extends Component {
     showUseFun = async () => {
         let result = await showUse()
         if (result.status === 0) {
-            let a
-            let newdata = result.data.users.map(item => {
-                a = result.data.roles.find(items => items._id === item.role_id)
-                return {
-                    key: item._id,
-                    username: item.username,
-                    phone: item.phone,
-                    role_id:a.name,
-                    email: item.email,
-                    create_time: filter_Time(item.create_time)
-                }
-            })
-            let i = []
-            result.data.roles.forEach(item => i.push({ name: item.name, key: item._id }))
-
-            this.setState({
-                dataSource: newdata,
-                rolelist: i
-            })
-        }
+          result.data.users.map(item=>{
+            item.key=item._id
+              result.data.roles.forEach(items=>{
+                  items.key=items._id
+                  if(item.role_id===items._id){
+                      item.role_id=items.name
+                      return item
+                  }else{
+                      return item
+                  }
+              })
+          })
+        console.log(result.data.users) 
+        this.setState({
+            dataSource:result.data.users,
+            rolelist:result.data.roles
+        }) 
+     }
     }
+
+
+
+
+
+
 
     componentDidMount() {
         this.showUseFun()
